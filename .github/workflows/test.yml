@@ -47,7 +47,7 @@ jobs:
           --argjson courseId 1529 \
           --arg ext "aaa" \
           --arg name "$github_user" \
-          --argjson score "100" \
+          --argjson score "$total_succeeds" \
           --argjson totalScore 100 \
           '{channel: $channel, courseId: $courseId, ext: $ext, name: $name, score: $score, totalScore: $totalScore}')
 

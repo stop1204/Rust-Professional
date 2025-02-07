@@ -1,9 +1,10 @@
 use serde::{Deserialize, Serialize};
 use std::fs::{self, File};
-use std::path::{Path, PathBuf};
-use std::process::{Command, exit};
+use std::io::{self};
+use std::path::PathBuf;
+use std::process::{exit, Command};
 use std::time::Instant;
-use std::io::{self, Write};
+
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 struct Exercise {
@@ -155,6 +156,7 @@ fn evaluate_single_file(file_path: &PathBuf) -> bool {
         .arg("-o")
         .arg(&test_binary)  // 指定输出文件
         .output();
+    println!("compile_output: {}", format!("{:?}", compile_output).replace(r"\n", "\n"));
 
     if let Ok(output) = compile_output {
         if output.status.success() {

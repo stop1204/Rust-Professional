@@ -2,7 +2,7 @@
 	single linked list merge
 	This problem requires you to merge two ordered singly linked lists into one ordered singly linked list
 */
-
+#![feature(core_intrinsics)]
 
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
@@ -69,16 +69,41 @@ impl<T> LinkedList<T> {
             },
         }
     }
-	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
-	{
-		//TODO
-		Self {
-            length: 0,
-            start: None,
-            end: None,
+    pub fn merge(list_a: LinkedList<T>, list_b: LinkedList<T>) -> Self  where T:Ord+Clone,
+    {
+        let mut list_c = LinkedList::new();
+        let mut node_a = list_a.start;
+        let mut node_b = list_b.start;
+        while let (Some(a),Some(b))= (node_a,node_b){
+            let (val_a, val_b)= unsafe{(a.as_ref().val.clone(), b.as_ref().val.clone())};
+            if val_a <= val_b{
+                list_c.add(val_a);
+                node_a = unsafe{a.as_ref().next};
+            }else{
+                list_c.add(val_b);
+                node_b = unsafe{b.as_ref().next};
+            }
         }
-	}
+
+        while let Some(b) = node_b{
+            list_c.add(unsafe{b.as_ref().val.clone()});
+            node_b = unsafe{b.as_ref().next};
+        }
+        while let Some(a) = node_a{
+            list_c.add(unsafe{a.as_ref().val.clone()});
+            node_a = unsafe{a.as_ref().next};
+        }
+
+
+        // Self {
+        //     length: list_c.length,
+        //     start: list_c.start,
+        //     end: list_c.end,
+        // }
+        list_c
+    }
 }
+
 
 impl<T> Display for LinkedList<T>
 where
@@ -105,7 +130,10 @@ where
 }
 
 #[cfg(test)]
+
 mod tests {
+    use std::intrinsics::prefetch_write_instruction;
+
     use super::LinkedList;
 
     #[test]

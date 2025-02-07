@@ -1,12 +1,12 @@
 /*
-	double linked list reverse
-	This problem requires you to reverse a doubly linked list
+    double linked list reverse
+    This problem requires you to reverse a doubly linked list
 */
 
-
 use std::fmt::{self, Display, Formatter};
+use std::mem::swap;
 use std::ptr::NonNull;
-use std::vec::*;
+
 
 #[derive(Debug)]
 struct Node<T> {
@@ -72,9 +72,35 @@ impl<T> LinkedList<T> {
             },
         }
     }
-	pub fn reverse(&mut self){
-		// TODO
-	}
+
+    pub fn reverse(&mut self) {
+        if self.length <= 1 {
+            return;
+        }
+        // 準備一個指向前一個節點的指針
+        // 準備一個暫存節點
+        let mut prev = None;
+        let mut current = self.start;
+
+        // 初始狀態要反轉的話那麼第一個指針就指向 none, 第二個指針就指向第一個指針
+
+        while let Some(ptr) = current {
+            unsafe {
+                // 暫存下一個節點
+                let next = (*ptr.as_ptr()).next;
+                // 前一個節點應該指向下一個節點, 反轉就是下一個節點指向前一個節點
+                (*ptr.as_ptr()).next = prev;
+                // 指向暫存的下一個節點, 這裡就開始雙向指針的反轉, 交換了指針
+                (*ptr.as_ptr()).prev = next;
+                // 移動當前上一個節點到當前節點. ptr已經解構為 NonNull, prev 是 Option<NonNull<Node<T>>>
+                prev = Some(ptr);
+                // 當前的節點再指向下一個節點
+                current = next;
+            }
+        }
+        // 原來指向第一個和最後一個節點的指針交換
+        swap(&mut self.start, &mut self.end);
+    }
 }
 
 impl<T> Display for LinkedList<T>
@@ -105,6 +131,7 @@ where
 mod tests {
     use super::LinkedList;
 
+
     #[test]
     fn create_numeric_list() {
         let mut list = LinkedList::<i32>::new();
@@ -127,33 +154,34 @@ mod tests {
 
     #[test]
     fn test_reverse_linked_list_1() {
-		let mut list = LinkedList::<i32>::new();
-		let original_vec = vec![2,3,5,11,9,7];
-		let reverse_vec = vec![7,9,11,5,3,2];
-		for i in 0..original_vec.len(){
-			list.add(original_vec[i]);
-		}
-		println!("Linked List is {}", list);
-		list.reverse();
-		println!("Reversed Linked List is {}", list);
-		for i in 0..original_vec.len(){
-			assert_eq!(reverse_vec[i],*list.get(i as i32).unwrap());
-		}
-	}
+        let mut list = LinkedList::<i32>::new();
+        let original_vec = vec![2, 3, 5, 11, 9, 7];
+        let reverse_vec = vec![7, 9, 11, 5, 3, 2];
+        for i in 0..original_vec.len() {
+            list.add(original_vec[i]);
+        }
+        println!("Linked List is {}", list);
+        list.reverse();
+        println!("Reversed Linked List is {}", list);
+        for i in 0..original_vec.len() {
+            assert_eq!(reverse_vec[i], *list.get(i as i32).unwrap());
+        }
+    }
 
-	#[test]
-	fn test_reverse_linked_list_2() {
-		let mut list = LinkedList::<i32>::new();
-		let original_vec = vec![34,56,78,25,90,10,19,34,21,45];
-		let reverse_vec = vec![45,21,34,19,10,90,25,78,56,34];
-		for i in 0..original_vec.len(){
-			list.add(original_vec[i]);
-		}
-		println!("Linked List is {}", list);
-		list.reverse();
-		println!("Reversed Linked List is {}", list);
-		for i in 0..original_vec.len(){
-			assert_eq!(reverse_vec[i],*list.get(i as i32).unwrap());
-		}
-	}
+
+    #[test]
+    fn test_reverse_linked_list_2() {
+        let mut list = LinkedList::<i32>::new();
+        let original_vec = vec![34, 56, 78, 25, 90, 10, 19, 34, 21, 45];
+        let reverse_vec = vec![45, 21, 34, 19, 10, 90, 25, 78, 56, 34];
+        for i in 0..original_vec.len() {
+            list.add(original_vec[i]);
+        }
+        println!("Linked List is {}", list);
+        list.reverse();
+        println!("Reversed Linked List is {}", list);
+        for i in 0..original_vec.len() {
+            assert_eq!(reverse_vec[i], *list.get(i as i32).unwrap());
+        }
+    }
 }
