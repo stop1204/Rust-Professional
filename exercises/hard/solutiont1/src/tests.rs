@@ -4,7 +4,8 @@ mod conjecture;
 #[cfg(test)]
 mod tests {
     use super::conjecture::goldbach_conjecture;
-    use std::time::{Instant, Duration};
+    use std::time::{Duration, Instant};
+
 
     // 定义测试用例和预期结果
     const TEST_CASE: &str = "5777,5993";
@@ -15,7 +16,9 @@ mod tests {
         let start = Instant::now();
         let result = goldbach_conjecture();
         let duration = start.elapsed();
-
+        eprintln!("duration: {:?}", duration);
+        println!("result: {:?}", result);
+        assert!(false);
         // 时间超0.5s，判定不合格
         let mut total_score = 0.0;
         if duration <= Duration::from_millis(200) && result == TEST_CASE {
