@@ -18,7 +18,7 @@ mod tests {
         let duration = start.elapsed();
         eprintln!("duration: {:?}", duration);
         println!("result: {:?}", result);
-        assert!(false);
+        
         // 时间超0.5s，判定不合格
         let mut total_score = 0.0;
         if duration <= Duration::from_millis(200) && result == TEST_CASE {

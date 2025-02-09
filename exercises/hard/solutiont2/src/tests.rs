@@ -4,7 +4,8 @@ mod prime_factor;
 #[cfg(test)]
 mod tests {
     use super::prime_factor::find_max_prime_factor;
-    use std::time::{Instant, Duration};
+    use std::time::{Duration, Instant};
+
 
     // 定义测试用例和预期结果
     const TEST_CASES: &[(u128, u128)] = &[
@@ -28,6 +29,7 @@ mod tests {
             let start = Instant::now();
             let result = find_max_prime_factor(*input);
             let duration = start.elapsed();
+            println!("Input: {}, Expected: {}, Result: {}, Time: {:?}", input, expected, result, duration);
 
             // 时间超3s，判定不合格
             if duration <= Duration::new(3, 0) && result == *expected {
