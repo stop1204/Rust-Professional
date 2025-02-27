@@ -1,84 +1,36 @@
-pub fn time_info(date: &str) -> String {
-    let (year, month, day) = parse_date(date);
-    let week_number = calculate_week_number(year, month, day);
-    let day_of_week = calculate_day_of_week(year, month, day);
-    let day_of_year = calculate_day_of_year(year, month, day);
-    let days_left_in_year = calculate_days_left_in_year(year, month, day);
-    let days_to_spring_festival = calculate_days_to_spring_festival(year, month, day);
-    let days_to_stock_market = calculate_days_to_stock_market(year, month, day);
-
-    format!("{},{},{},{},{},{}",
-            week_number,
-            day_of_week,
-            day_of_year,
-            days_left_in_year,
-            days_to_spring_festival,
-            days_to_stock_market)
-}
+// src/tests.rs
+mod calc_time;
 
 
-fn parse_date(date: &str) -> (u32, u32, u32) {
-    let parts: Vec<&str> = date.split('-').collect();
-    (parts[0].parse().unwrap(), parts[1].parse().unwrap(), parts[2].parse().unwrap())
-}
+#[cfg(test)]
+mod tests {
+    use super::calc_time::time_info;
+    use std::time::{Duration, Instant};
 
 
-fn is_leap_year(year: u32) -> bool {
-    (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)
-}
+    // 定义测试用例和预期结果，待补充8个测试用例子
+    const TEST_CASES: &[(&str, &str)] = &[
+        ("2025-01-01", "1,3,1,364,27,0"),
+        ("2025-01-18", "2,6,18,347,10,1"),
+    ];
 
 
-fn days_in_month(year: u32, month: u32) -> u32 {
-    match month {
-        4 | 6 | 9 | 11 => 30,
-        2 => if is_leap_year(year) { 29 } else { 28 },
-        _ => 31
-    }
-}
+    // 定义一个测试函数来验证每个测试用例
+    #[test]
+    fn test_calc_time() {
+        let mut total_score = 0.0;
+        for (input, expected) in TEST_CASES {
+            let start = Instant::now();
+            let result = time_info(*input);
+            let duration = start.elapsed();
+            // 输出测试用例和结果
+            println!("Test case: {}, expected: {}, result: {}", input, expected, result);     // 时间超0.2s，判定不合格
+            if duration <= Duration::from_millis(200) && result == *expected {
+                total_score += 10.0;
+            }
+        }
 
-
-fn calculate_day_of_year(year: u32, month: u32, day: u32) -> u32 {
-    (1..month).map(|m| days_in_month(year, m)).sum::<u32>() + day
-}
-
-
-fn calculate_days_left_in_year(year: u32, month: u32, day: u32) -> u32 {
-    (if is_leap_year(year) { 366 } else { 365 })
-        - calculate_day_of_year(year, month, day)
-}
-
-
-fn calculate_week_number(year: u32, month: u32, day: u32) -> u32 {
-    let day_of_year = calculate_day_of_year(year, month, day);
-    let first_day = calculate_day_of_week(year, 1, 1);
-    ((day_of_year + first_day - 2) / 7) + 1
-}
-
-
-fn calculate_day_of_week(year: u32, month: u32, day: u32) -> u32 {
-    let t = [0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4];
-    let mut y = year;
-    if month < 3 { y -= 1; }
-    (y + y / 4 - y / 100 + y / 400 + t[(month - 1) as usize] + day) % 7
-}
-
-
-fn calculate_days_to_spring_festival(year: u32, month: u32, day: u32) -> u32 {
-    let target_year = if month > 2 || (month == 2 && day > 1) { year + 1 } else { year };
-    if target_year == year {
-        32 - day // Days left in January + 1 day in February
-    } else {
-        let days_to_year_end = calculate_days_left_in_year(year, month, day);
-        days_to_year_end + 32 // Days to year end + days in January + 1 day in February
-    }
-}
-
-
-fn calculate_days_to_stock_market(year: u32, month: u32, day: u32) -> u32 {
-    let day_of_week = calculate_day_of_week(year, month, day);
-    match day_of_week {
-        6 => 2,
-        7 => 1,
-        _ => 0,
+        println!("Total score: {:.2}", total_score);
+        assert_eq!(100.00, total_score);
     }
 }

@@ -1,19 +1,20 @@
 pub fn time_info(date: &str) -> String {
-    let (year, month, day) = parse_date(date);
-    let week_number = calculate_week_number(year, month, day);
-    let day_of_week = calculate_day_of_week(year, month, day);
-    let day_of_year = calculate_day_of_year(year, month, day);
-    let days_left_in_year = calculate_days_left_in_year(year, month, day);
-    let days_to_spring_festival = calculate_days_to_spring_festival(year, month, day);
-    let days_to_stock_market = calculate_days_to_stock_market(year, month, day);
-
-    format!("{},{},{},{},{},{}",
-            week_number,
-            day_of_week,
-            day_of_year,
-            days_left_in_year,
-            days_to_spring_festival,
-            days_to_stock_market)
+    // let (year, month, day) = parse_date(date);
+    // let week_number = calculate_week_number(year, month, day);
+    // let day_of_week = calculate_day_of_week(year, month, day);
+    // let day_of_year = calculate_day_of_year(year, month, day);
+    // let days_left_in_year = calculate_days_left_in_year(year, month, day);
+    // let days_to_spring_festival = calculate_days_to_spring_festival(year, month, day);
+    // let days_to_stock_market = calculate_days_to_stock_market(year, month, day);
+    //
+    // format!("{},{},{},{},{},{}",
+    //         week_number,
+    //         day_of_week,
+    //         day_of_year,
+    //         days_left_in_year,
+    //         days_to_spring_festival,
+    //         days_to_stock_market)
+    String::from("1,1,1,1,1,1")
 }
 
 

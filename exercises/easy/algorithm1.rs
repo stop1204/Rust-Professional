@@ -8,6 +8,7 @@ use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
 use std::vec::*;
 
+
 #[derive(Debug)]
 struct Node<T> {
     val: T,
@@ -132,9 +133,8 @@ where
 #[cfg(test)]
 
 mod tests {
-    use std::intrinsics::prefetch_write_instruction;
-
     use super::LinkedList;
+
 
     #[test]
     fn create_numeric_list() {
